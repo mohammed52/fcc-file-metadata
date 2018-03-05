@@ -7,7 +7,13 @@
 
 let fs = require('fs');
 let express = require('express');
+let multer = require('multer');
+
 let app = express();
+
+const upload = multer({
+  dest: 'uploads/' // this saves your file into a directory called "uploads"
+});
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -35,20 +41,6 @@ app.route('/_api/package.json')
     });
   });
 
-
-app.route('/*')
-  .get(function(req, res) {
-    if (req.path == '/') {
-      res.sendFile(process.cwd() + '/views/index.html');
-    } else {
-      let path = req.path;
-      if (path.charAt(0) == '/')
-        path = path.substr(1);
-      console.log("path", path);
-      res.send(getReturnObject(decodeURI(path)));
-    }
-  });
-
 app.route('/')
   .get(function(req, res) {
 
@@ -63,6 +55,13 @@ app.route('/')
       });
     }
   })
+
+app.post('/', upload.single('file-to-upload'), (req, res) => {
+
+  console.log(req.file.size);
+  res.redirect('/');
+
+});
 
 // Respond not found to all the wrong routes
 app.use(function(req, res, next) {
