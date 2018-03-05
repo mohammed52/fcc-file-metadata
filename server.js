@@ -5,25 +5,14 @@
 // first commit
 'use strict';
 
-var fs = require('fs');
-var express = require('express');
-var app = express();
-var timestamp = require('unix-timestamp')
-var moment = require('moment')
-// var reload = require('reload')
-
-console.log(timestamp.fromDate("January 2018"));
-console.log(timestamp.fromDate("January 1930"));
-console.log(timestamp.now());
-console.log(timestamp.toDate(9237856082));
-console.log(timestamp.fromDate("38 January 1930"));
-console.log(timestamp.toDate(-9237856082));
-// console.log(timestamp.duration("65465498494654"));
+let fs = require('fs');
+let express = require('express');
+let app = express();
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
-    var allowedOrigins = ['https://narrow-plane.gomix.me', 'https://www.freecodecamp.com'];
-    var origin = req.headers.origin || '*';
+    let allowedOrigins = ['https://narrow-plane.gomix.me', 'https://www.freecodecamp.com'];
+    let origin = req.headers.origin || '*';
     if (!process.env.XORIG_RESTRICT || allowedOrigins.indexOf(origin) > -1) {
       console.log(origin);
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -46,56 +35,6 @@ app.route('/_api/package.json')
     });
   });
 
-
-// app.route('/${str}')
-  //   .get(function(req, res) {
-  //     res.send({
-  //       hello: "world"
-  //     })
-  //   });
-
-function isInteger(x) {
-  console.log("checking...");
-  return (x % 1 === 0);
-}
-
-if (isInteger('true')) {
-  console.log("isInteger");
-} else {
-  console.log("not an integer")
-}
-
-console.log("parsing int");
-console.log(parseInt("iauwiowef"));
-
-
-function getReturnObject(path) {
-  console.log("parseInt(path)", parseInt(path));
-  if (isNaN(parseInt(path))) {
-    // is Not a unix number, process as readable date
-    console.log("timestamp.fromDate(path)", timestamp.fromDate(path));;
-    if (isNaN(timestamp.fromDate(path))) {
-      // can get the unix timestamp integer from path
-      return {
-        "unix": timestamp.fromDate(path),
-        "natural": path
-      }
-    } else {
-      // no unix timestamp possible, return null
-      return {
-        "unix": null,
-        "natural": null
-      }
-
-    }
-  } else {
-    // input is a unix timestamp number, return date
-    return {
-      "unix": path,
-      natural: moment(timestamp.toDate(parseInt(path))).format('MMMM Do YYYY')
-    }
-  }
-}
 
 app.route('/*')
   .get(function(req, res) {

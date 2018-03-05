@@ -16,6 +16,8 @@
     "url": "https://idontknow/todo.git"
   },
   "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-google": "^0.9.1",
     "reload": "^2.2.2"
   }
 }
