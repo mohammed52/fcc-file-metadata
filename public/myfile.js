@@ -1,21 +1,23 @@
 $(document).ready(function() {
-  $("#form_selector").submit(function() {
 
-    $.ajax({
-      type: "POST",
-      url: "form_handler.php",
-      data: $(this).serialize(),
-      success: function() {
-        // callback code here
+  $('#uploadForm').submit(function() {
+    $("#status").empty().text("File is uploading...");
+
+    $(this).ajaxSubmit({
+
+      error: function(xhr) {
+        status('Error: ' + xhr.status);
+      },
+
+      success: function(response) {
+        console.log(response)
+        // $("#status").empty().text(response);
+        $("#status").empty().text("File is uploaded!");
+        alert("File Size: " + response)
+
       }
-    })
+    });
 
-  })
-})
-
-function showUploadConfirmation() {
-  console.log("upload successful");
-  return;
-}
-
-showUploadConfirmation();
+    return false;
+  });
+});

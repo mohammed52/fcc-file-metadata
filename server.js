@@ -10,10 +10,20 @@ let express = require('express');
 let multer = require('multer');
 
 let app = express();
+var bytes = require('bytes');
 
-const upload = multer({
-  dest: 'uploads/' // this saves your file into a directory called "uploads"
+var storage = multer.diskStorage({
+  destination: function(req, file, callback) {
+    callback(null, './uploads');
+  },
+  filename: function(req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
 });
+
+var upload = multer({
+  storage: storage
+}).single('userPhoto');
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -57,11 +67,16 @@ app.route('/')
     }
   })
 
-app.post('/', upload.single('file-to-upload'), (req, res) => {
+app.post('/api/photo', function(req, res) {
+  upload(req, res, function(err) {
+    if (err) {
+      return res.end("Error uploading file.");
+    }
+    console.log(req.file.size);
 
-  console.log(req.file.size);
-  res.redirect('/');
+    res.end("File size: " + bytes(req.file.size));
 
+  });
 });
 
 // Respond not found to all the wrong routes
